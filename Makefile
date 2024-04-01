@@ -1,0 +1,5 @@
+
+
+
+format:
+	gofmt -s -w ./
