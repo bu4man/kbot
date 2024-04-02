@@ -45,4 +45,4 @@ test:
 
 clean:
 	rm -rf ./kbot
-	docker rmi ${REGESTRY}/${VERSION}-${TARGETARCH}
+	docker rmi ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH} 
