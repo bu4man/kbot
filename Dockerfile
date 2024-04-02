@@ -1,9 +1,12 @@
-FROM quay.io/projectquay/golang:1.20 as builder
+FROM --platform=$BUILDPLATFORM quay.io/projectquay/golang:1.20 as builder
 
 WORKDIR /go/src/app
 COPY . .
-ARG TARGETOS=linux
-ARG TARGETARCH=amd64
+# ARG TARGETOS=linux
+# ARG TARGETARCH=amd64
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
 RUN make build
 
 FROM scratch
