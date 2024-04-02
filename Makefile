@@ -2,17 +2,21 @@
 APP=$(shell basename $(shell git remote get-url origin))
 REGESTRY=gcr.io/heroic-bird-417808
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
-TARGETOS ?= $(word 1, $(MAKECMDGOALS))
+# TARGETOS ?= $(word 1, $(MAKECMDGOALS))
+TARGETOS=linux
 TARGETARCH ?= $(if $(word 2, $(MAKECMDGOALS)),$(word 2, $(MAKECMDGOALS)),amd64) #amd64
-IMAGES=$(shell docker images --filter=reference="${REGESTRY}/${APP}:${VERSION}*" -q)
+# IMAGES=$(shell docker images --filter=reference="${REGESTRY}/${APP}:${VERSION}*" -q)
 
 
 empty_params:
 	$(error Please run 'make <OS> [arch]' to build binary for required OS and architecture. Default architecture is amd64)
 
 
+linux: TARGETOS=linux
 linux: image push
+windows: TARGETOS=windows
 windows: image push
+MacOs: TARGETOS=MacOs
 MacOs: image push
 
 # $(TARGETOS): image
@@ -45,4 +49,5 @@ test:
 
 clean:
 	rm -rf ./kbot
-	docker rmi $(IMAGES)
+	# docker rmi $(IMAGES)
+	docker rmi ${VERSION}-$(TARGETOS)-${TARGETARCH} 
