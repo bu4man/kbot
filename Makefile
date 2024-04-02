@@ -49,5 +49,4 @@ test:
 
 clean:
 	rm -rf ./kbot
-	# docker rmi $(IMAGES)
-	docker rmi ${VERSION}-$(TARGETOS)-${TARGETARCH} 
+	docker rmi ${REGESTRY}/${APP}:${VERSION}-$(TARGETOS)-${TARGETARCH} 
