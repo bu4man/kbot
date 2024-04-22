@@ -1,7 +1,7 @@
 
 APP=$(shell basename $(shell git remote get-url origin))
 #REGESTRY=gcr.io/heroic-bird-417808
-REGESTRY=bogdan82
+REGESTRY=ghcr.io/bu4man
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 # TARGETOS ?= $(word 1, $(MAKECMDGOALS))
 TARGETOS=linux
