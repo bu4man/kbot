@@ -4,6 +4,7 @@ on: push
 
 env:
   TARGETARCH: amd64
+  REGISTRY: ghcr.io
   
 jobs:
   ci:
