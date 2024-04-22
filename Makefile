@@ -1,7 +1,7 @@
 
 APP=$(shell basename $(shell git remote get-url origin))
 #REGESTRY=gcr.io/heroic-bird-417808
-REGISTRY ?= $(if $(REGISTRY),$(REGISTRY),"bogdan82") # Default is Docker hub
+REGESTRY?=$(if $(REGISTRY),$(REGISTRY),bogdan82)
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 # TARGETOS ?= $(word 1, $(MAKECMDGOALS))
 TARGETOS=linux
@@ -37,10 +37,10 @@ build: format get_all
 	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -v -o kbot -ldflags "-X="github.com/bu4man/kbot/cmd.appVersion=${VERSION}
 
 image:
-	docker buildx build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH} --platform=${TARGETOS}/${TARGETARCH} # --build-arg TARGETOS=$(TARGETOS) --build-arg TARGETARCH=$(TARGETARCH)
+	docker buildx build . -t ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH} --platform=${TARGETOS}/${TARGETARCH} # --build-arg TARGETOS=$(TARGETOS) --build-arg TARGETARCH=$(TARGETARCH)
 
 push:
-	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH} 
+	docker push ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH} 
 
 lint:
 	golint
@@ -50,4 +50,4 @@ test:
 
 clean:
 	rm -rf ./kbot
-	docker rmi ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH} 
+	docker rmi ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH} 
