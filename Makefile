@@ -1,12 +1,12 @@
 
 APP=$(shell basename $(shell git remote get-url origin))
 #REGESTRY=gcr.io/heroic-bird-417808
-REGESTRY := $(if $(REGESTRY),$(REGESTRY),bogdan82) # Default is Docker hub
+REGISTRY ?= $(if $(REGISTRY),$(REGISTRY),"bogdan82") # Default is Docker hub
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 # TARGETOS ?= $(word 1, $(MAKECMDGOALS))
 TARGETOS=linux
 TARGETARCH ?= $(if $(word 2, $(MAKECMDGOALS)),$(word 2, $(MAKECMDGOALS)),amd64) #amd64
-# IMAGES=$(shell docker images --filter=reference="${REGESTRY}/${APP}:${VERSION}*" -q)
+# IMAGES=$(shell docker images --filter=reference="${REGISTRY}/${APP}:${VERSION}*" -q)
 
 
 empty_params:
@@ -37,10 +37,10 @@ build: format get_all
 	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -v -o kbot -ldflags "-X="github.com/bu4man/kbot/cmd.appVersion=${VERSION}
 
 image:
-	docker buildx build . -t ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH} --platform=${TARGETOS}/${TARGETARCH} # --build-arg TARGETOS=$(TARGETOS) --build-arg TARGETARCH=$(TARGETARCH)
+	docker buildx build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH} --platform=${TARGETOS}/${TARGETARCH} # --build-arg TARGETOS=$(TARGETOS) --build-arg TARGETARCH=$(TARGETARCH)
 
 push:
-	docker push ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH} 
+	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH} 
 
 lint:
 	golint
@@ -50,4 +50,4 @@ test:
 
 clean:
 	rm -rf ./kbot
-	docker rmi ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH} 
+	docker rmi ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH} 
