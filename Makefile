@@ -37,10 +37,10 @@ build: format get_all
 	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -v -o kbot -ldflags "-X="github.com/bu4man/kbot/cmd.appVersion=${VERSION}
 
 image:
-	docker buildx build . -t ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH} --platform=${TARGETOS}/${TARGETARCH} # --build-arg TARGETOS=$(TARGETOS) --build-arg TARGETARCH=$(TARGETARCH)
+	docker buildx build . -t ${REGESTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETARCH} --platform=${TARGETOS}/${TARGETARCH} # --build-arg TARGETOS=$(TARGETOS) --build-arg TARGETARCH=$(TARGETARCH)
 
 push:
-	docker push ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH} 
+	docker push ${REGESTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETARCH} 
 
 lint:
 	golint
@@ -50,4 +50,4 @@ test:
 
 clean:
 	rm -rf ./kbot
-	docker rmi ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH} 
+	docker rmi ${REGESTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETARCH} 
