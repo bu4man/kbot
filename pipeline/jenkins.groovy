@@ -34,9 +34,11 @@ pipeline {
 
         stage('push') {
             steps {
-                echo "Push image to docker hub"
-                docker.withRegistry('', 'dockerhub')
-                sh 'make push'            }
+                script {
+                    docker.withRegistry('', 'dockerhub')
+                    sh 'make push' 
+                }                     
+            }
         }
     }
 }
