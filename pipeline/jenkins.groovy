@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    enviroment {
+        REPO = 'https://github.com/den-vasyliev/kbot'
+        BRANCH = 'main'
+    }
     parameters {
 
         choice(name: 'OS', choices: ['linux', 'darwin', 'windows', 'all'], description: 'Pick OS')
@@ -7,6 +11,13 @@ pipeline {
 
     }
     stages {
+        stage('Clone') {
+            steps {
+                echo 'CLONE REPOSITORY'
+                git branch: "${BRANCH}", url: "${REPO}"
+            }
+        }
+        
         stage('Example') {
             steps {
                 echo "Build for platform ${params.OS}"
