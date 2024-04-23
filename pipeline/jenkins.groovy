@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    enviroment {
+    environment {
         REPO = 'https://github.com/den-vasyliev/kbot'
         BRANCH = 'main'
     }
