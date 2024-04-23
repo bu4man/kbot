@@ -35,8 +35,7 @@ pipeline {
         stage('push') {
             steps {
                 script {
-                    docker.withRegistry('', 'dockerhub')
-                    sh 'make push' 
+                    docker.withRegistry('', 'dockerhub') {sh 'make push'}
                 }                     
             }
         }
