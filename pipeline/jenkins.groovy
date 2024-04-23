@@ -11,18 +11,23 @@ pipeline {
 
     }
     stages {
-        stage('Clone') {
+        stage('clone') {
             steps {
                 echo 'CLONE REPOSITORY'
                 git branch: "${BRANCH}", url: "${REPO}"
             }
         }
-        
-        stage('Example') {
+        stage('test') {
+            steps {
+                echo 'TEST EXECUTION STARTED'
+                sh 'make test'
+            }
+        }
+        stage('image') {
             steps {
                 echo "Build for platform ${params.OS}"
-
                 echo "Build for arch: ${params.ARCH}"
+                sh 'make image'
 
             }
         }
