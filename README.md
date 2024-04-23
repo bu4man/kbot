@@ -1,17 +1,20 @@
 # kbot
 
-Telegram bot on Go language. 
+Project to create Telegram bot (using Go) and test CI/CD pipeline.
 
 Bot can be found here:
 https://t.me/k8s_devops_course_bot
 
-Use below commands to build:
+Available commands in Telegram are:
+- /start 
+- /start hello
 
-`~~gofmt -s -w ./ ~~` # not required, as format should be already correct
 
-`go get` # To download all dependencies
+## Deploy locally
 
-`go build -ldflags "-X="github.com/bu4man/kbot/cmd.appVersion=v1.0.2`
+Bot can be started locally. Build binary using below command:
+
+`make build`
 
 Before start, TELE_TOKEN env variable needs to be set.
 
@@ -19,6 +22,21 @@ Before start, TELE_TOKEN env variable needs to be set.
 
 Use `./kbot start` to launch bot.
 
-Available commands in Telegram are:
-- /start 
-- /start hello
+## Deploy in Docker
+
+Bot can be started in Docker. Build container image using below commands:
+
+`make image` or `make <OS> <ARCHITECTURE>` (Linux and amd64 built by default)
+
+You can set REGISTRY environment variable to define desired repository. By default, it's set to my Docker Hub.
+
+To launch, set TELE_TOKEN and pass it to docker using below format:
+
+`docker run -it -e TELE_TOKEN <IMAGE>`
+
+## Deploy in Kubernetes
+
+Deploy can be done using ArgoCD. Refer to [this instruction](https://github.com/bu4man/AsciiArtify/blob/main/doc/POC.md). 
+
+Overall deploy looks like:
+![ArgoCD deploy](img1.png)
