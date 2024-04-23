@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        REPO = 'https://github.com/den-vasyliev/kbot'
+        REPO = 'https://github.com/bu4man/kbot'
         BRANCH = 'main'
     }
     parameters {
@@ -30,6 +30,13 @@ pipeline {
                 sh 'make image'
 
             }
+        }
+
+        stage('push') {
+            steps {
+                echo "Push image to docker hub"
+                docker.withRegistry('', 'dockerhub')
+                sh 'make push'            }
         }
     }
 }
