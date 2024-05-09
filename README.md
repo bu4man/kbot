@@ -40,3 +40,5 @@ Deploy can be done using ArgoCD. Refer to [this instruction](https://github.com/
 
 Overall deploy looks like:
 ![ArgoCD deploy](img1.png)
+
+# Security checks
