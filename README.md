@@ -41,4 +41,11 @@ Deploy can be done using ArgoCD. Refer to [this instruction](https://github.com/
 Overall deploy looks like:
 ![ArgoCD deploy](img1.png)
 
-# Security checks added,
+## Security checks of git code
+
+Security checks are performed when git commit command is executed using .git/pre-commit bash script and gitleaks utility
+In order to use this feature please do following
+
+1. copy `pre-commit` file from root directory into .git/hooks
+2. enable security checks by executing `git config --add hooks.pre-commit.enable true`
+3. add some secrets into code, add file into git and try to commit

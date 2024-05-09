@@ -1,0 +1,72 @@
+#!/bin/bash
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+#
+# To enable this hook, rename this file to "pre-commit".
+
+# Perform code security review to avoid publishing secrets
+# 
+
+check_enable=$(git config --type=bool hooks.pre-commit.enable)
+
+if [ "$check_enable" != "true" ]
+then
+	echo "Security check isn't enabled"
+	exit 0
+else
+	# Install gitleaks
+	ARCH=$(uname -m)
+	# OS=$(uname)
+	echo "We're about to perform security checks for code. But first gitleaks needs to be installed"
+	if [[ "$OSTYPE" == "linux-gnu"* && "$ARCH" == "x86_64" ]]; then
+    	# Limux OS 64 bit detected
+		# https://github.com/gitleaks/gitleaks/releases/download/v8.18.2/gitleaks_8.18.2_linux_x64.tar.gz
+		echo "Installing gitleaks for Linux x64"
+		curl -Ls https://github.com/gitleaks/gitleaks/releases/download/v8.18.2/gitleaks_8.18.2_linux_x64.tar.gz|tar xzf - gitleaks
+
+	elif [[ "$OSTYPE" == "linux-gnu" && "$ARCH" == "i686" ]]; then
+		# Linux and 32 bit arch detected
+		# https://github.com/gitleaks/gitleaks/releases/download/v8.18.2/gitleaks_8.18.2_linux_x32.tar.gz
+		echo "Installing gitleaks for Linux x32"
+		curl -Ls https://github.com/gitleaks/gitleaks/releases/download/v8.18.2/gitleaks_8.18.2_linux_x32.tar.gz|tar xzf - gitleaks
+	elif [[ "$OSTYPE" == "linux-gnu" && "$ARCH" == "arm64" ]]; then
+		# Lunux arm64
+		# https://github.com/gitleaks/gitleaks/releases/download/v8.18.2/gitleaks_8.18.2_linux_arm64.tar.gz
+		echo "Installing gitleaks for Linux arm64"
+		curl -Ls https://github.com/gitleaks/gitleaks/releases/download/v8.18.2/gitleaks_8.18.2_linux_arm64.tar.gz|tar xzf - gitleaks
+
+	elif [[ "$OSTYPE" == "darwin" &&  "$ARCH" == "x86_64" ]]; then
+		# Mac OSX x64
+		# https://github.com/gitleaks/gitleaks/releases/download/v8.18.2/gitleaks_8.18.2_darwin_x64.tar.gz
+		echo "Installing gitleaks on Mac x86"
+
+	elif [[ "$OSTYPE" == "cygwin" ]]; then
+			# POSIX compatibility layer and Linux environment emulation for Windows
+			echo "Installing gitleaks on Win CygWin"
+	elif [[ "$OSTYPE" == "msys" ]]; then
+			# Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+			echo "Installing gitleaks on Win"
+
+	else
+			# Unknown.
+			echo "Uknown Arch and OS detected. Exit with error"
+			exit 1
+	fi
+	# perform code check
+	./gitleaks protect -v --redact --staged
+	exit_code=$?
+	if [[ $exit_code != 0 ]]; then
+    	echo "Security check failed. Not allowing commit"
+		echo "If you still need this commit to be passed, please run below command:"
+		tput bold; echo "git config hooks.pre-commit.enable false"
+		rm ./gitleaks
+		exit $exit_code
+	fi
+	# delete gitleaks file
+	rm ./gitleaks
+	exit 0
+fi
+
